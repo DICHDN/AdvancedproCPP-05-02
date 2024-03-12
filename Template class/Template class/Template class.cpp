@@ -1,68 +1,75 @@
-﻿#include <iostream>
+﻿/*
+Задача 2. Таблица
+Описание
+Нужно написать шаблонный класс для двумерного массива (таблицы). Все ячейки таблицы имеют один и тот же тип данных T.
+
+Требования к классу:
+
+Должен быть конструктор, получающий на входе два целых числа — количество строк и столбцов соответственно.
+Должны быть константная и неконстантная версии оператора [], возвращающего массив, к которому снова можно применить оператор [].
+Нужно, чтобы работали конструкции вида:
+* cout << table[i][j]; * table[i][j] = value;.
+
+Должна быть константная функция Size, возвращающая размер таблицы.
+Пример правильной работы программы
+auto test = table<int>(2, 3);
+test[0][0] = 4;
+std::cout << test[0][0]; // выводит 4
+
+*/
+
+
+
+#include <iostream>
 #include <vector>
 
-template <class T>
+template <class T >
 class table
 {
 protected:
-    table** matrix = nullptr;
+    std::vector<std::vector<T> > matrix;
     int stb = 0;
     int str = 0;
 public:
     table(int stb, int str)
     {
-        this->stb = stb;
-        this->str = str;
-    }
-    table **matrix0(int stb, int str)
-    {
-        this->stb = stb;
-        this->str = str;
-        table** matrix1 = new T * [stb];
-        for (int i = 0;i < stb; ++i)
-        {
-            matrix1[i] = new T[str];
-        }
+        std::vector<std::vector<T> >  matrix1(stb, std::vector<T>(str));
         
-        for (int i = 0; i < stb; ++i)
-        {
-            for (int j = 0; j < stb; ++j)
-            {
-                matrix1[i][j] = NULL;
-            }
-        }
         this->matrix = matrix1;
-            return matrix1;
-    }
+    }      
     
-    T get_element(int stb,int str) const
+    T get_element(int stb, int str) 
     {
         return matrix[stb][str];
     }
-    T set_element(int stb, int str, T element)
+
+    T get_const_element(int stb, int str) const
     {
-        
-        matrix[stb][str] = element; //требуется перегрузка?
-        
+        return matrix[stb][str];
     }
+    void set_element(int stb, int str, T element)
+    {
+        matrix[stb][str] = element; 
+    }
+    std::vector<T>& operator[](int index)
+    {
+        return matrix[index];
+    }
+       
     ~table()
     {
-        for (int i = 0; i < stb; ++i)
-        {
-            delete matrix[i];
-        }
-        delete[] matrix;
+        
     }
-
 };
-    
-          
-
 
 int main()
 {
-    table<double> a(5,5);
+    table<double> a(5, 5);
     a.set_element(0, 0, 4);
-    std::cout << a.get_element(0,0);
+    std::cout << a.get_const_element(0,0)<<std::endl;
+    std::cout << a.get_element(0, 0) << std::endl;
+    auto test = table<int>(2, 3);
+    test[0][0] = 7;  
+    std::cout << test[0][0]; 
 }
 
